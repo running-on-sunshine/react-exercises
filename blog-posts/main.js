@@ -56,7 +56,7 @@ let BlogFooter = (props) =>
     ]) 
 
 let vdom = h('div', {}, [
-    h(BlogPageHeader, { title: ['Blog Posts'] }),
+    h(BlogHeader, { title: ['Blog Posts'] }),
     h(BlogPostList, { posts }),
     h(BlogFooter, footer)
 ]);
