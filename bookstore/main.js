@@ -5,16 +5,24 @@
 
 let h = React.createElement;
 
-let BookRow = (bookTitle) => 
-    h('li', {}, [bookTitle])
+let BookRow = (props) => 
+    h('li', {}, [
+        h('h2', {}, props.title),
+        h('p', {}, 'Lorem ipsum!')
+    ])
+
+let BookList = (props) => {
+    return h('ul', {}, 
+        props.books.map(bookTitle => 
+            h(BookRow, { title: bookTitle })
+        )
+    );
+};
 
 let vdom = h('div', {}, [
     h('h1', { className: 'big-header' }, ['Bookstore']),
-    h('ul', {}, [
-        BookRow('Book 1'),
-        BookRow('Book 2'),
-        BookRow('Book 3')
-        ]),
+    h(BookList, { books: ['Book 1', 'Book 2', 'Book 3'] }),
+    h(BookList, { books: ['A Tale of Two Cities', 'Book 7', 'Book 12'] }),
     h('footer', {}, ['Copyright 2018']),
     h('a', { href: 'mypage.com' }, ['My Website']),
     ]
