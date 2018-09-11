@@ -53,12 +53,13 @@ let BlogFooter = (props) =>
     h('div', { className: 'footer' }, [
         h('footer', { className: 'blog-copyright' }, props.copyright),  
         h('a', { className: 'blog-url', href: props.href }, props.url)
-    ]) 
+    ])
 
-let vdom = h('div', {}, [
-    h(BlogHeader, { title: ['Blog Posts'] }),
-    h(BlogPostList, { posts }),
-    h(BlogFooter, footer)
-]);
+let BlogHomepage = (props) =>
+    h('div', { className: 'homepage' }, [
+        h(BlogHeader, { title: ['Blog Posts'] }),
+        h(BlogPostList, { posts: props.posts }),
+        h(BlogFooter, props.footer)
+    ])
 
-ReactDOM.render(vdom, document.querySelector('.react-root'));
+ReactDOM.render(h(BlogHomepage, { posts, footer }), document.querySelector('.react-root'));
