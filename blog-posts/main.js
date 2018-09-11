@@ -25,18 +25,40 @@ let posts = [
       }
 ];
 
-let h = React.createElement;
-
-let createBlogListItem = (post) => {
-    return h('li', {}, [
-        h('h3', { className: 'blog-item-title'}, [post['title']]),
-        h('p', { className: 'blog-item-body'}, [post['body']])
-    ])
+let footer = {
+        "copyright": "Copyright 2018",
+        "href": "mypage.com",
+        "url": "My Website"
 };
 
+let h = React.createElement;
+
+let BlogHeader = (props) =>
+    h('h1', { className: 'main-header', }, [props.title])
+
+let BlogPostRow = (props) =>
+    h('li', { className: 'blog-post' }, [
+        h('h2', { className: 'blog-post-title' }, props.title),
+        h('p', { className: 'blog-post-body' }, props.body)
+    ])
+
+let BlogPostList = (props) =>
+    h('ul', {}, 
+        props.posts.map(post => 
+            h(BlogPostRow, post)
+        )
+    );
+
+let BlogFooter = (props) =>
+    h('div', { className: 'footer' }, [
+        h('footer', { className: 'blog-copyright' }, props.copyright),  
+        h('a', { className: 'blog-url', href: props.href }, props.url)
+    ]) 
+
 let vdom = h('div', {}, [
-    h('h1', { className: 'main-header' }, ['Blog Posts']),
-    h('ul', {}, posts.map(post => createBlogListItem(post)))
+    h(BlogPageHeader, { title: ['Blog Posts'] }),
+    h(BlogPostList, { posts }),
+    h(BlogFooter, footer)
 ]);
 
 ReactDOM.render(vdom, document.querySelector('.react-root'));
