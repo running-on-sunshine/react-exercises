@@ -1,23 +1,25 @@
 let h = React.createElement;
 
-const books = [
-    'Book 1', 
-    'The Color Purple',
-    'Where the Sidewalk Ends',
-    'A Tale of Two Cities',
-    'Book 7',
-    '1984'
-];
+const initialBookList = [
+    {
+        "id": 1,
+        "title": "A Tale of Two Cities"
+    },
+    {
+        "id": 2,
+        "title": "The Color Purple"
+    },
+    {
+         "id": 3,
+         "title": "Where the Sidewalk Ends"
+    }
+ ];
 
 const titles = [
     'Bookstore',
     'Emporium',
     'Hall of Death by Papercuts'
 ];
-
-let removeBook = (bookToRemove) => {
-    books = books.filter(book => book !== bookToRemove);
-};
 
 let snakifyBook = (bookToSnakify) => {
     let newBooks = books.map(book => 
@@ -28,11 +30,10 @@ let snakifyBook = (bookToSnakify) => {
 
 let BookRow = (props) => 
     h('li', {}, [
-        h('h2', {}, props.title),
+        h('h2', {}, props.book.title),
         h('button', {
             onClick: () => {
-                removeBook(props.title);
-                rerender();
+                props.removeBook(props.book);
             },
         }, 'Delete Me!'),
         h('button', {
@@ -46,8 +47,11 @@ let BookRow = (props) =>
 
 let BookList = (props) => 
     h('ul', {}, 
-        props.books.map(bookTitle => 
-            h(BookRow, { title: bookTitle })
+        props.books.map(book => 
+            h(BookRow, {
+                book: book,
+                removeBook: props.removeBook
+            })
         )
     )
 
@@ -61,10 +65,18 @@ class Homepage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            books: initialBookList,
             storeTitleIndex: 0 
         }
-    };
+    }
+
     render() {
+        let removeBook = (bookToRemove) => {
+            this.setState({
+                books: this.state.books.filter(book =>
+                    book.id !== bookToRemove.id)
+            })
+        };
         return h('div', {}, [
             h('h1', { className: 'big-header' }, titles[this.state.storeTitleIndex]),
             h('button', {
@@ -74,7 +86,10 @@ class Homepage extends React.Component {
                     })
                 }
             }, 'Change store name'),
-            h(BookList, { books: books }),
+            h(BookList, { 
+                books: this.state.books,
+                removeBook: removeBook
+            }),
             h(PageFooter)
         ])
     }
@@ -83,11 +98,7 @@ class Homepage extends React.Component {
 let homepage = new Homepage();
 homepage.render()
 
-let rerender = () => {
-    ReactDOM.render(
-        h(Homepage), 
-        document.querySelector('.react-root')
-    );
-};
-
-rerender();
+ReactDOM.render(
+    h(Homepage), 
+    document.querySelector('.react-root')
+);
