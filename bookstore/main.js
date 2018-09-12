@@ -5,12 +5,55 @@
 
 let h = React.createElement;
 
+let books = [
+    'Book 1', 
+    'The Color Purple',
+    'Where the Sidewalk Ends',
+    'A Tale of Two Cities',
+    'Book 7',
+    '1984'
+];
+
+let storeTitleIndex = 0;
+
+let titles = [
+    'Bookstore',
+    'Emporium',
+    'Hall of Death by Papercuts'
+];
+
+let changeStoreTitle = () => 
+    storeTitleIndex = (storeTitleIndex + 1) % titles.length;
+
+let removeBook = (bookToRemove) => {
+    books = books.filter(book => book !== bookToRemove);
+};
+
+let snakifyBook = (bookToSnakify) => {
+    let newBooks = books.map(book => 
+        (book === bookToSnakify) ? book + '🐍' : book
+    );
+    books = newBooks;
+};
+
 let PageHeader = (props) =>
-    h('h1', { className: 'big-header' }, ['Bookstore'])
+    h('h1', { className: 'big-header' }, titles[storeTitleIndex])
 
 let BookRow = (props) => 
     h('li', {}, [
         h('h2', {}, props.title),
+        h('button', {
+            onClick: () => {
+                removeBook(props.title);
+                rerender();
+            },
+        }, 'Delete Me!'),
+        h('button', {
+            onClick: () => {
+                snakifyBook(props.title);
+                rerender();
+            },
+        }, 'Snakify Me!'),
         h('p', {}, 'Lorem ipsum!')
     ])
 
@@ -29,10 +72,22 @@ let PageFooter = (props) =>
 
 let Homepage = (props) =>
     h('div', {}, [
-        h(PageHeader, {}),
-        h(BookList, { books: ['Book 1', 'Book 2', 'Book 3'] }),
-        h(BookList, { books: ['A Tale of Two Cities', 'Book 7', 'Book 12'] }),
-        h(PageFooter, {})
+        h(PageHeader),
+        h('button', {
+            onClick: () => {
+                changeStoreTitle();
+                rerender();
+            },
+        }, 'Change store name'),
+        h(BookList, { books: books }),
+        h(PageFooter)
     ])
 
-ReactDOM.render(h(Homepage), document.querySelector('.react-root'));
+let rerender = () => {
+    ReactDOM.render(
+        h(Homepage), 
+        document.querySelector('.react-root')
+    );
+};
+
+rerender();
