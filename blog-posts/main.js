@@ -27,10 +27,6 @@ let initialPostList = [
 
 let h = React.createElement;
 
-let removePost = (postToRemove) => {
-    posts = posts.filter(post => post.id !== postToRemove.id)
-};
-
 let snakifyPost = (postToSnakify) => {
     let newPosts = posts.map(post => 
         (post.id === postToSnakify.id) ? 
@@ -47,11 +43,10 @@ let BlogHeader = (props) =>
 
 let BlogPostRow = (props) =>
     h('li', { className: 'blog-post' }, [
-        h('h2', { className: 'blog-post-title' }, props.title),
+        h('h2', { className: 'blog-post-title' }, props.post.title),
         h('button', {
             onClick: () => {
-                removePost(props);
-                rerender();
+                props.removePost(props.post);
             },
         }, 'Delete Me!'),
         h('button', {
@@ -60,13 +55,16 @@ let BlogPostRow = (props) =>
                 rerender();
             },
         }, 'Snakify Me!'),
-        h('p', { className: 'blog-post-body' }, props.body)
+        h('p', { className: 'blog-post-body' }, props.post.body)
     ])
 
 let BlogPostList = (props) =>
     h('ul', {}, 
         props.posts.map(post => 
-            h(BlogPostRow, post)
+            h(BlogPostRow, {
+                post: post,
+                removePost: props.removePost
+            })
         )
     )
 
@@ -85,10 +83,17 @@ class BlogHomepage extends React.Component {
     }
 
     render() {
+        let removePost = (postToRemove) => {
+            this.setState({
+                posts: this.state.posts.filter(post => 
+                    post.id !== postToRemove.id)
+            })
+        };
         return h('div', { className: 'homepage' }, [
             h(BlogHeader),
             h(BlogPostList, {
-                posts: this.state.posts 
+                posts: this.state.posts,
+                removePost: removePost, 
             }),
             h(BlogFooter)
         ])
@@ -98,11 +103,7 @@ class BlogHomepage extends React.Component {
 let blogHomepage = new BlogHomepage();
 blogHomepage.render();
 
-let rerender = () => {
-    ReactDOM.render(
-        h(BlogHomepage), 
-        document.querySelector('.react-root')
-    );
-}
-
-rerender();
+ReactDOM.render(
+    h(BlogHomepage), 
+    document.querySelector('.react-root')
+);
