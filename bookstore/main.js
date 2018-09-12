@@ -21,13 +21,6 @@ const titles = [
     'Hall of Death by Papercuts'
 ];
 
-let snakifyBook = (bookToSnakify) => {
-    let newBooks = books.map(book => 
-        (book === bookToSnakify) ? book + '🐍' : book
-    );
-    books = newBooks;
-};
-
 let BookRow = (props) => 
     h('li', {}, [
         h('h2', {}, props.book.title),
@@ -38,8 +31,7 @@ let BookRow = (props) =>
         }, 'Delete Me!'),
         h('button', {
             onClick: () => {
-                snakifyBook(props.title);
-                rerender();
+                props.snakifyBook(props.book);
             },
         }, 'Snakify Me!'),
         h('p', {}, 'Lorem ipsum!')
@@ -50,7 +42,8 @@ let BookList = (props) =>
         props.books.map(book => 
             h(BookRow, {
                 book: book,
-                removeBook: props.removeBook
+                removeBook: props.removeBook,
+                snakifyBook: props.snakifyBook
             })
         )
     )
@@ -77,6 +70,16 @@ class Homepage extends React.Component {
                     book.id !== bookToRemove.id)
             })
         };
+        let snakifyBook = (bookToSnakify) => {
+            this.setState({
+                books: this.state.books.map(book =>
+                    (book.id === bookToSnakify.id) ?
+                        Object.assign({}, book, { title: book.title + '🐍' })
+                    :
+                        book
+                )
+            });
+        };
         return h('div', {}, [
             h('h1', { className: 'big-header' }, titles[this.state.storeTitleIndex]),
             h('button', {
@@ -88,7 +91,8 @@ class Homepage extends React.Component {
             }, 'Change store name'),
             h(BookList, { 
                 books: this.state.books,
-                removeBook: removeBook
+                removeBook: removeBook,
+                snakifyBook: snakifyBook
             }),
             h(PageFooter)
         ])
