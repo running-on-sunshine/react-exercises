@@ -1,11 +1,6 @@
-// let createElement = (element, props, children) => {
-//     return { element, children, props }
-//     };
-// }
-
 let h = React.createElement;
 
-let books = [
+const books = [
     'Book 1', 
     'The Color Purple',
     'Where the Sidewalk Ends',
@@ -14,16 +9,11 @@ let books = [
     '1984'
 ];
 
-let storeTitleIndex = 0;
-
-let titles = [
+const titles = [
     'Bookstore',
     'Emporium',
     'Hall of Death by Papercuts'
 ];
-
-let changeStoreTitle = () => 
-    storeTitleIndex = (storeTitleIndex + 1) % titles.length;
 
 let removeBook = (bookToRemove) => {
     books = books.filter(book => book !== bookToRemove);
@@ -35,9 +25,6 @@ let snakifyBook = (bookToSnakify) => {
     );
     books = newBooks;
 };
-
-let PageHeader = (props) =>
-    h('h1', { className: 'big-header' }, titles[storeTitleIndex])
 
 let BookRow = (props) => 
     h('li', {}, [
@@ -70,18 +57,31 @@ let PageFooter = (props) =>
         h('a', { href: 'mypage.com' }, ['My Website'])
     ])
 
-let Homepage = (props) =>
-    h('div', {}, [
-        h(PageHeader),
-        h('button', {
-            onClick: () => {
-                changeStoreTitle();
-                rerender();
-            },
-        }, 'Change store name'),
-        h(BookList, { books: books }),
-        h(PageFooter)
-    ])
+class Homepage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            storeTitleIndex: 0 
+        }
+    };
+    render() {
+        return h('div', {}, [
+            h('h1', { className: 'big-header' }, titles[this.state.storeTitleIndex]),
+            h('button', {
+                onClick: () => {
+                    this.setState({
+                        storeTitleIndex: (this.state.storeTitleIndex + 1) % titles.length
+                    })
+                }
+            }, 'Change store name'),
+            h(BookList, { books: books }),
+            h(PageFooter)
+        ])
+    }
+}
+
+let homepage = new Homepage();
+homepage.render()
 
 let rerender = () => {
     ReactDOM.render(
