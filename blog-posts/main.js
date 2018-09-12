@@ -1,4 +1,4 @@
-let posts = [
+let initialPostList = [
     {
         "userId": 1,
         "id": 1,
@@ -25,12 +25,6 @@ let posts = [
       }
 ];
 
-let footer = {
-        "copyright": "Copyright 2018",
-        "href": "mypage.com",
-        "text": "My Website"
-};
-
 let h = React.createElement;
 
 let removePost = (postToRemove) => {
@@ -49,7 +43,7 @@ let snakifyPost = (postToSnakify) => {
 };
 
 let BlogHeader = (props) =>
-    h('h1', { className: 'main-header', }, [props.title])
+    h('h1', { className: 'main-header', }, ['Blog Posts'])
 
 let BlogPostRow = (props) =>
     h('li', { className: 'blog-post' }, [
@@ -78,20 +72,35 @@ let BlogPostList = (props) =>
 
 let BlogFooter = (props) =>
     h('div', { className: 'footer' }, [
-        h('footer', { className: 'blog-copyright' }, props.copyright),  
-        h('a', { className: 'blog-url', href: props.href }, props.text)
+        h('footer', { className: 'blog-copyright' }, ['Copyright 2018']),  
+        h('a', { className: 'blog-url', href: 'mypage.com' }, ['My Website'])
     ])
 
-let BlogHomepage = (props) =>
-    h('div', { className: 'homepage' }, [
-        h(BlogHeader, { title: ['Blog Posts'] }),
-        h(BlogPostList, { posts: props.posts }),
-        h(BlogFooter, props.footer)
-    ])
+class BlogHomepage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            posts: initialPostList
+        }
+    }
+
+    render() {
+        return h('div', { className: 'homepage' }, [
+            h(BlogHeader),
+            h(BlogPostList, {
+                posts: this.state.posts 
+            }),
+            h(BlogFooter)
+        ])
+    }
+}
+
+let blogHomepage = new BlogHomepage();
+blogHomepage.render();
 
 let rerender = () => {
     ReactDOM.render(
-        h(BlogHomepage, { posts, footer }), 
+        h(BlogHomepage), 
         document.querySelector('.react-root')
     );
 }
