@@ -27,17 +27,6 @@ let initialPostList = [
 
 let h = React.createElement;
 
-let snakifyPost = (postToSnakify) => {
-    let newPosts = posts.map(post => 
-        (post.id === postToSnakify.id) ? 
-            Object.assign({}, post, { title: post.title + '🐍' }) 
-            // {...post, title: post.title + '🐍'}
-        : 
-            post
-    );
-    posts = newPosts;
-};
-
 let BlogHeader = (props) =>
     h('h1', { className: 'main-header', }, ['Blog Posts'])
 
@@ -51,8 +40,7 @@ let BlogPostRow = (props) =>
         }, 'Delete Me!'),
         h('button', {
             onClick: () => {
-                snakifyPost(props);
-                rerender();
+                props.snakifyPost(props.post);
             },
         }, 'Snakify Me!'),
         h('p', { className: 'blog-post-body' }, props.post.body)
@@ -63,7 +51,8 @@ let BlogPostList = (props) =>
         props.posts.map(post => 
             h(BlogPostRow, {
                 post: post,
-                removePost: props.removePost
+                removePost: props.removePost,
+                snakifyPost: props.snakifyPost
             })
         )
     )
@@ -89,11 +78,23 @@ class BlogHomepage extends React.Component {
                     post.id !== postToRemove.id)
             })
         };
+        let snakifyPost = (postToSnakify) => {
+            this.setState({
+                posts: this.state.posts.map(post => 
+                    (post.id === postToSnakify.id) ? 
+                        Object.assign({}, post, { title: post.title + '🐍' }) 
+                    // {...post, title: post.title + '🐍'}
+                    : 
+                        post
+                )
+            });
+        };
         return h('div', { className: 'homepage' }, [
             h(BlogHeader),
             h(BlogPostList, {
                 posts: this.state.posts,
-                removePost: removePost, 
+                removePost: removePost,
+                snakifyPost: snakifyPost 
             }),
             h(BlogFooter)
         ])
