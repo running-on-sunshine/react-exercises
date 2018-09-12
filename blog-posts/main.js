@@ -28,10 +28,25 @@ let posts = [
 let footer = {
         "copyright": "Copyright 2018",
         "href": "mypage.com",
-        "url": "My Website"
+        "text": "My Website"
 };
 
 let h = React.createElement;
+
+let removePost = (postToRemove) => {
+    posts = posts.filter(post => post.id !== postToRemove.id)
+};
+
+let snakifyPost = (postToSnakify) => {
+    let newPosts = posts.map(post => 
+        (post.id === postToSnakify.id) ? 
+            Object.assign({}, post, { title: post.title + '🐍' }) 
+            // {...post, title: post.title + '🐍'}
+        : 
+            post
+    );
+    posts = newPosts;
+};
 
 let BlogHeader = (props) =>
     h('h1', { className: 'main-header', }, [props.title])
@@ -39,6 +54,18 @@ let BlogHeader = (props) =>
 let BlogPostRow = (props) =>
     h('li', { className: 'blog-post' }, [
         h('h2', { className: 'blog-post-title' }, props.title),
+        h('button', {
+            onClick: () => {
+                removePost(props);
+                rerender();
+            },
+        }, 'Delete Me!'),
+        h('button', {
+            onClick: () => {
+                snakifyPost(props);
+                rerender();
+            },
+        }, 'Snakify Me!'),
         h('p', { className: 'blog-post-body' }, props.body)
     ])
 
@@ -47,12 +74,12 @@ let BlogPostList = (props) =>
         props.posts.map(post => 
             h(BlogPostRow, post)
         )
-    );
+    )
 
 let BlogFooter = (props) =>
     h('div', { className: 'footer' }, [
         h('footer', { className: 'blog-copyright' }, props.copyright),  
-        h('a', { className: 'blog-url', href: props.href }, props.url)
+        h('a', { className: 'blog-url', href: props.href }, props.text)
     ])
 
 let BlogHomepage = (props) =>
@@ -62,4 +89,11 @@ let BlogHomepage = (props) =>
         h(BlogFooter, props.footer)
     ])
 
-ReactDOM.render(h(BlogHomepage, { posts, footer }), document.querySelector('.react-root'));
+let rerender = () => {
+    ReactDOM.render(
+        h(BlogHomepage, { posts, footer }), 
+        document.querySelector('.react-root')
+    );
+}
+
+rerender();
