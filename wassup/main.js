@@ -41,6 +41,9 @@ let TextArea = (props) =>
         className: 'wassup-form-input',
         rows: '2',
         cols: '50',
+        maxlength: '180',
+        wrap: 'hard',
+        required: 'required',
         placeholder: 'Share Wassup!'
     })
 
