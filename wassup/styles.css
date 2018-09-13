@@ -1,0 +1,39 @@
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+.main-header {
+    margin: 0.2em 0.5em 0.5em;
+}
+
+.wassup-form {
+    display: flex;
+    margin: 0.2em 1.3em;
+}
+
+.wassup-form-input {
+    font-size: 1em;
+    outline: none;
+}
+
+.wassup-form-submit {
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 0.5em;
+    outline: none;
+}
+
+.wassup-list {
+    padding-right: 1.5em;
+    padding-left: 0.5em
+}
+
+.wassup-row {
+    background-color: rgba(240, 247, 248, 0.918);
+    width: 75%;
+    padding: 0 0.3em;
+    margin: 0.5em;
+    border-radius: 0.5em;
+    list-style: none;
+}
