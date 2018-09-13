@@ -1,6 +1,6 @@
 const h = React.createElement;
 
-let wassups = [
+const initialWassupList = [
     {   
         "userId": 1,
         "id": 1,
@@ -41,7 +41,7 @@ let TextArea = (props) =>
         className: 'wassup-form-input',
         rows: '2',
         cols: '50',
-        maxlength: '180',
+        maxLength: '180',
         wrap: 'hard',
         required: 'required',
         placeholder: 'Share Wassup!'
@@ -75,12 +75,23 @@ let WassupList = (props) =>
         )
     ])
 
-let Homepage = (props) =>
-    h('div', { className: 'homepage' }, 
+class Homepage extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            wassups: initialWassupList
+        }
+    }
+
+    render() {
+        return h('div', { className: 'homepage' }, 
         h(PageHeader),
-        h(WassupForm, { props }),
-        h(WassupList, { wassups })
-    )
+        h(WassupForm, {}),
+        h(WassupList, { 
+            wassups: this.state.wassups
+        }))
+    }
+}
 
 ReactDOM.render(
     h(Homepage), 
