@@ -1,25 +1,20 @@
-const h = React.createElement;
-
 let generateId = () =>
     Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString();
 
 let PageHeader = (props) => 
-    h('h1', { className: 'main-header' }, ['Wassup!'])
+    <h1 className='main-header'>Wassup!</h1>
 
 let WassupRow = (props) => 
-    h('li', { className: 'wassup-row' }, 
-        h('p', { className: 'wassup-message' }, props.wassup.content)
-    )
+    <li className='wassup-row'>
+        <p>{props.wassup.content}</p>
+    </li>
 
 let WassupList = (props) => 
-    h('ul', { className: 'wassup-list' }, [
-        props.wassups.map(wassup => 
-            h(WassupRow, {
-                wassup: wassup,
-                key: wassup.id
-            })
-        ).reverse()
-    ])
+    <ul className='wassup-list'>
+        { props.wassups.map(wassup => 
+            <WassupRow wassup={wassup} key={wassup.id} />
+        ).reverse() }
+    </ul>
 
 class WassupForm extends React.Component {
     constructor(props) {
@@ -30,30 +25,29 @@ class WassupForm extends React.Component {
     }
     
     render() {
-        return h('form', { 
-            onSubmit: (event) => {
+        return <form 
+            className='wassup-form'
+            onSubmit={ (event) => {
                 event.preventDefault();
                 this.props.addWassup(this.state.newWassup);
-            },
-            className: 'wassup-form' 
-        }, 
-            h('input', { 
-                onChange: (event) => {
-                    let value = event.target.value;
-                    this.setState({ newWassup: value })
-                },
-                value: this.state.newWassup,
-                className: 'wassup-form-input',
-                type: 'text',
-                placeholder: 'Share Wassup!'
-            }),
-            h('button', { 
-                className: 'wassup-form-submit',
-                type: 'submit',
-            }, 'Post!')
-        )
-    }
-}
+                } 
+            }>
+            <input
+                type='text'
+                className='wassup-form-input'
+                placeholder='Share Wassup!'
+                value={this.state.newWassup}
+                onChange={ (event)  => {
+                    this.setState({ newWassup: event.target.value })
+                    } }
+            />
+            <button 
+                className='wassup-form-submit' 
+                type='submit'>Post!
+            </button>
+        </form>;
+    };
+};
 
 class Homepage extends React.Component {
     constructor(props) {
@@ -74,17 +68,12 @@ class Homepage extends React.Component {
                 ])
             });
         }
-        return h('div', { className: 'homepage' },
-            h(PageHeader),
-            h(WassupForm, {
-                addWassup: addWassup
-            }),
-            h(WassupList, { wassups: this.state.wassups })
-        )
-    }
-}
+        return <div className='homepage'>
+            <PageHeader />
+            <WassupForm addWassup={addWassup} />
+            <WassupList wassups={this.state.wassups} />
+        </div>;
+    };
+};
 
-ReactDOM.render(
-    h(Homepage), 
-    document.querySelector('.react-root')
-);
+ReactDOM.render(<Homepage />, document.querySelector('.react-root'));
