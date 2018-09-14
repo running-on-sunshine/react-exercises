@@ -56,6 +56,14 @@ class Homepage extends React.Component {
             wassups: []
         };
     }
+    
+    getWassups() {
+        fetch('http://0.tcp.ngrok.io:18229/wassups.json')
+            .then(res => res.json())
+            .then(wassups => {
+                this.setState({ wassups: wassups});
+            });
+        }
 
     render() {
         let addWassup = (newWassup) => {
@@ -70,10 +78,15 @@ class Homepage extends React.Component {
         }
         return <div className='homepage'>
             <PageHeader />
+            <button className='get-wassups' onClick={() => this.getWassups()}>Get Wassups</button>
             <WassupForm addWassup={addWassup} />
             <WassupList wassups={this.state.wassups} />
         </div>;
     };
+
+    componentDidMount() {
+        this.getWassups();
+    }
 };
 
 ReactDOM.render(<Homepage />, document.querySelector('.react-root'));

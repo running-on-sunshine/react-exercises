@@ -7,6 +7,13 @@ html, body {
     margin: 0.2em 0.5em 0.5em;
 }
 
+.get-wassups {
+    padding: 0.5em;
+    margin: 0 2em 1em;
+    border-radius: 0.5em;
+    outline: none;
+}
+
 .wassup-form {
     display: flex;
     margin: 0.2em 1.3em;
