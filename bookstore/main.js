@@ -1,4 +1,4 @@
-let h = React.createElement;
+const h = React.createElement;
 
 const initialBookList = [
     {
@@ -98,9 +98,6 @@ class Homepage extends React.Component {
         ])
     }
 }
-
-let homepage = new Homepage();
-homepage.render()
 
 ReactDOM.render(
     h(Homepage), 
