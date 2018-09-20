@@ -16,40 +16,50 @@ let WassupList = (props) =>
         ).reverse() }
     </ul>
 
-class WassupForm extends React.Component {
+class WassupFormWrapper extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
+        this.state= {
             newWassup: ''
-        };
+        }
     }
-    
-    render() {
-        return <form 
-            className='wassup-form'
-            onSubmit={ (event) => {
-                event.preventDefault();
-                this.props.addWassup(this.state.newWassup);
-                } 
-            }>
-            <input
-                type='text'
-                className='wassup-form-input'
-                placeholder='Share Wassup!'
-                value={this.state.newWassup}
-                onChange={ (event)  => {
-                    this.setState({ newWassup: event.target.value })
-                    } }
-            />
-            <button 
-                className='wassup-form-submit' 
-                type='submit'>Post!
-            </button>
-        </form>;
-    };
-};
 
-class Homepage extends React.Component {
+    render() {
+        let updateWassup = (message) => {
+            this.setState({ newWassup: message })
+        }
+
+        return <WassupForm {...this.props}
+            newWassup={this.state.newWassup}
+            updateWassup={updateWassup}
+        />
+    }
+}
+
+let WassupForm = (props) =>
+    <form 
+        className='wassup-form'
+        onSubmit={ (event) => {
+            event.preventDefault();
+            props.addWassup(props.newWassup);
+            } 
+        }>
+        <input
+            type='text'
+            className='wassup-form-input'
+            placeholder='Share Wassup!'
+            value={props.newWassup}
+            onChange={ (event)  => {
+                props.updateWassup(event.target.value)
+                } }
+        />
+        <button 
+            className='wassup-form-submit' 
+            type='submit'>Post!
+        </button>
+    </form>
+
+class HomepageContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,10 +68,10 @@ class Homepage extends React.Component {
     }
     
     getWassups() {
-        fetch('http://0.tcp.ngrok.io:18229/wassups.json')
+        fetch('http://0.tcp.ngrok.io:10766/wassups.json')
             .then(res => res.json())
             .then(wassups => {
-                this.setState({ wassups: wassups});
+                this.setState({ wassups: wassups });
             });
         }
 
@@ -76,12 +86,10 @@ class Homepage extends React.Component {
                 ])
             });
         }
-        return <div className='homepage'>
-            <PageHeader />
-            <button className='get-wassups' onClick={() => this.getWassups()}>Get Wassups</button>
-            <WassupForm addWassup={addWassup} />
-            <WassupList wassups={this.state.wassups} />
-        </div>;
+        return <Homepage {...this.props}
+            addWassup={addWassup}
+            wassups={this.state.wassups}
+        />
     };
 
     componentDidMount() {
@@ -89,4 +97,12 @@ class Homepage extends React.Component {
     }
 };
 
-ReactDOM.render(<Homepage />, document.querySelector('.react-root'));
+let Homepage = (props) => 
+    <div className='homepage'>
+        <PageHeader />
+        <button className='get-wassups' onClick={() => props.getWassups()}>Get Wassups</button>
+        <WassupFormWrapper addWassup={props.addWassup} />
+        <WassupList wassups={props.wassups} />
+    </div>
+
+ReactDOM.render(<HomepageContainer />, document.querySelector('.react-root'));
