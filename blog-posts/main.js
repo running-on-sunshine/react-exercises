@@ -1,4 +1,4 @@
-let initialPostList = [
+const initialPostList = [
     {
         "userId": 1,
         "id": 1,
@@ -25,36 +25,46 @@ let initialPostList = [
       }
 ];
 
-let h = React.createElement;
+const h = React.createElement;
 
 let BlogHeader = (props) =>
-    h('h1', { className: 'main-header', }, ['Blog Posts'])
+    h('h1', { className: 'main-header' }, ['Blog Posts'])
+
+let RemoveButton = (props) =>
+    h('button', {
+        onClick: () => {
+            props.removePost(props.post);
+        },
+        type: 'button',
+        className: 'button'
+    }, 'Delete Me!')
+
+let SnakifyButton = (props) =>
+    h('button', {
+        onClick: () => {
+            props.snakifyPost(props.post);
+        },
+        type: 'button',
+        className: 'button'
+    }, 'Snakify Me!')
 
 let BlogPostRow = (props) =>
     h('li', { className: 'blog-post' }, [
         h('h2', { className: 'blog-post-title' }, props.post.title),
-        h('button', {
-            onClick: () => {
-                props.removePost(props.post);
-            },
-        }, 'Delete Me!'),
-        h('button', {
-            onClick: () => {
-                props.snakifyPost(props.post);
-            },
-        }, 'Snakify Me!'),
-        h('p', { className: 'blog-post-body' }, props.post.body)
+        h('p', { className: 'blog-post-body' }, props.post.body),
+        h(RemoveButton, props),
+        h(SnakifyButton, props)
     ])
 
 let BlogPostList = (props) =>
-    h('ul', {}, 
+    h('ul', { className: 'blog-post-list' }, [ 
         props.posts.map(post => 
             h(BlogPostRow, {
                 post: post,
                 removePost: props.removePost,
                 snakifyPost: props.snakifyPost
             })
-        )
+        )]
     )
 
 let BlogFooter = (props) =>
@@ -83,7 +93,6 @@ class BlogHomepage extends React.Component {
                 posts: this.state.posts.map(post => 
                     (post.id === postToSnakify.id) ? 
                         Object.assign({}, post, { title: post.title + '🐍' }) 
-                    // {...post, title: post.title + '🐍'}
                     : 
                         post
                 )
@@ -100,9 +109,6 @@ class BlogHomepage extends React.Component {
         ])
     }
 }
-
-let blogHomepage = new BlogHomepage();
-blogHomepage.render();
 
 ReactDOM.render(
     h(BlogHomepage), 
